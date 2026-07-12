@@ -1,0 +1,18 @@
+{
+  "sudo": ["50935878442", "19713836288"],
+  "banned": [],
+  "blocked": [],
+  "antilink": true,
+  "mode": "self",
+  "autoread": false,
+  "autobio": false,
+  "autorecord": false,
+  "autotyping": true,
+  "autoviewsts": true,
+  "autoreact": false,
+  "autoreactchannel": true,
+  "account": "",
+  "warns": {},
+  "afks": {},
+  "prefix": "."
+}
