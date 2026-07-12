@@ -1,0 +1,33 @@
+{
+  "name": "꒦꒷𝗦𝗨𝗭𝗔𝗡𝗔 𝗠𝗗꒷꒦",
+  "version": "1.0.0",
+  "description": "WhatsApp Bot via Telegram — Pairing Code connection. Dev: Doberto",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "keywords": [
+    "whatsapp-bot",
+    "telegram-bot",
+    "baileys",
+    "pairing-code",
+    "natsu-tech"
+  ],
+  "author": "Doberto Mr Lit",
+  "license": "MIT",
+  "dependencies": {
+    "@hapi/boom": "^10.0.1",
+    "@whiskeysockets/baileys": "latest",
+    "axios": "^1.7.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "pino": "^9.5.0",
+    "telegraf": "^4.16.3"
+  }
+}
