@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SUZANA MD — Pair your WhatsApp</title>
+<meta name="description" content="Connect your WhatsApp number to SUZANA MD without Telegram." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #08070d;
+    --bg-panel: #0f0e1a;
+    --line: #23213a;
+    --violet: #8a5cff;
+    --cyan: #37e6ff;
+    --text: #eae8f5;
+    --muted: #6f6c8a;
+    --danger: #ff5c7a;
+    --ok: #37ffb0;
+    --radius: 14px;
+  }
+  *{ box-sizing: border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background:
+      radial-gradient(circle at 15% 0%, rgba(138,92,255,0.16), transparent 45%),
+      radial-gradient(circle at 85% 100%, rgba(55,230,255,0.10), transparent 45%),
+      var(--bg);
+    color: var(--text);
+    font-family: 'Space Grotesk', sans-serif;
+    min-height: 100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 24px;
+  }
+  .mono{ font-family:'JetBrains Mono', monospace; }
+
+  .card{
+    width:100%;
+    max-width: 460px;
+    background: var(--bg-panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow:hidden;
+    box-shadow: 0 0 0 1px rgba(138,92,255,0.05), 0 20px 60px -20px rgba(0,0,0,0.6);
+  }
+  .titlebar{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--line);
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+  }
+  .dot{ width:9px; height:9px; border-radius:50%; }
+  .dot.r{ background:#ff5c7a; }
+  .dot.y{ background:#ffd166; }
+  .dot.g{ background:#37ffb0; }
+  .titlebar-label{
+    margin-left: 8px;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+  }
+
+  .content{ padding: 28px 26px 26px; }
+
+  .brand{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    color: var(--cyan);
+    text-transform: uppercase;
+    margin: 0 0 6px;
+  }
+  h1{
+    font-size: 22px;
+    font-weight: 600;
+    margin: 0 0 6px;
+    letter-spacing: -0.01em;
+  }
+  .sub{
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0 0 24px;
+  }
+
+  label{
+    display:block;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 8px;
+    font-family:'JetBrains Mono', monospace;
+    letter-spacing: 0.03em;
+  }
+  .input-row{
+    display:flex;
+    align-items:center;
+    background: #0b0a15;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 0 14px;
+    transition: border-color .15s ease, box-shadow .15s ease;
+  }
+  .input-row:focus-within{
+    border-color: var(--violet);
+    box-shadow: 0 0 0 3px rgba(138,92,255,0.18);
+  }
+  .input-row span{
+    color: var(--muted);
+    font-family:'JetBrains Mono', monospace;
+    font-size: 15px;
+    padding-right: 8px;
+    border-right: 1px solid var(--line);
+    margin-right: 10px;
+  }
+  input[type=tel]{
+    flex:1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-family:'JetBrains Mono', monospace;
+    font-size: 16px;
+    padding: 13px 0;
+    letter-spacing: 0.02em;
+  }
+  input[type=tel]::placeholder{ color: #423f5c; }
+
+  .hint{
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 8px;
+    line-height: 1.5;
+  }
+
+  button.primary{
+    width:100%;
+    margin-top: 18px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-family:'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    color: #0a0812;
+    background: linear-gradient(90deg, var(--cyan), var(--violet));
+    transition: filter .15s ease, transform .1s ease;
+  }
+  button.primary:hover{ filter: brightness(1.08); }
+  button.primary:active{ transform: scale(0.99); }
+  button.primary:disabled{
+    opacity: 0.55;
+    cursor: not-allowed;
+    filter: none;
+  }
+
+  .result{
+    margin-top: 22px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: #0b0a15;
+    padding: 18px;
+    display:none;
+  }
+  .result.show{ display:block; }
+  .result-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .code{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--ok);
+    text-align:center;
+    padding: 10px 0 4px;
+  }
+  .steps{
+    margin: 14px 0 0;
+    padding-left: 18px;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .steps b{ color: var(--text); }
+
+  .error{
+    margin-top: 16px;
+    display:none;
+    border: 1px solid rgba(255,92,122,0.35);
+    background: rgba(255,92,122,0.08);
+    color: #ffb3c2;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .error.show{ display:block; }
+
+  .footer{
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.03em;
+  }
+  .footer .status{
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .pulse{
+    width:7px; height:7px; border-radius:50%;
+    background: var(--ok);
+    box-shadow: 0 0 8px var(--ok);
+  }
+
+  .stats{
+    margin-top: 22px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap: 10px;
+    border: 1px solid var(--line);
+    background: #0b0a15;
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-family:'JetBrains Mono', monospace;
+  }
+  .stats .num{
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--cyan);
+    line-height:1;
+  }
+  .stats .label{
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .stats .sep{
+    width:1px; height:28px;
+    background: var(--line);
+    margin: 0 4px;
+  }
+
+  .social{
+    margin-top: 16px;
+    display:flex;
+    justify-content:center;
+    gap: 12px;
+  }
+  .social a{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: #0b0a15;
+    color: var(--muted);
+    transition: color .15s ease, border-color .15s ease, transform .15s ease;
+  }
+  .social a:hover{
+    color: var(--cyan);
+    border-color: var(--violet);
+    transform: translateY(-2px);
+  }
+  .social svg{ width:18px; height:18px; fill: currentColor; }
+
+  @media (prefers-reduced-motion: no-preference){
+    .pulse{ animation: pulse 2s ease-in-out infinite; }
+    @keyframes pulse{
+      0%,100%{ opacity:1; }
+      50%{ opacity:0.35; }
+    }
+  }
+
+  button.primary:focus-visible,
+  input:focus-visible{
+    outline: 2px solid var(--cyan);
+    outline-offset: 2px;
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="titlebar">
+    <div class="dot r"></div>
+    <div class="dot y"></div>
+    <div class="dot g"></div>
+    <div class="titlebar-label">suzana-md — pairing</div>
+  </div>
+
+  <div class="content">
+    <p class="brand">[ SUZANA MD ]</p>
+    <h1>Pair your WhatsApp</h1>
+    <p class="sub">No Telegram needed. Enter your number, get an 8-digit code, and link the bot from WhatsApp → Linked Devices.</p>
+
+    <form id="pairForm">
+      <label for="phone">Phone number</label>
+      <div class="input-row">
+        <span>+</span>
+        <input type="tel" id="phone" name="phone" placeholder="50968570352" inputmode="numeric" autocomplete="tel" required />
+      </div>
+      <p class="hint">International format, no leading 0. Example: <span class="mono">50968570352</span></p>
+
+      <button type="submit" class="primary" id="submitBtn">Generate pairing code</button>
+    </form>
+
+    <div class="error" id="errorBox"></div>
+
+    <div class="result" id="resultBox">
+      <div class="result-row"><span>NUMBER</span><span id="resultNumber"></span></div>
+      <div class="code" id="resultCode">— — — — — — — —</div>
+      <div class="result-row"><span>VALID FOR</span><span>2 minutes</span></div>
+      <ol class="steps">
+        <li>Open <b>WhatsApp</b> on your phone</li>
+        <li>Go to <b>Settings → Linked Devices</b></li>
+        <li>Tap <b>Link a Device</b> → <b>Link with phone number instead</b></li>
+        <li>Enter the code above</li>
+      </ol>
+    </div>
+
+    <div class="stats" id="statsBox">
+      <span class="num" id="statConnected">—</span>
+      <span class="label">connected</span>
+      <span class="sep"></span>
+      <span class="num" id="statTotal">—</span>
+      <span class="label">total paired</span>
+    </div>
+
+    <div class="social">
+      <a href="https://www.instagram.com/doberto.best.dev?igsh=MW5iOWY3d2VlMTViaw==" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2c3.2 0 3.58.01 4.85.07 1.17.05 1.97.24 2.43.4a4.9 4.9 0 0 1 1.77 1.15 4.9 4.9 0 0 1 1.15 1.77c.16.46.35 1.26.4 2.43.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.24 1.97-.4 2.43a4.9 4.9 0 0 1-1.15 1.77 4.9 4.9 0 0 1-1.77 1.15c-.46.16-1.26.35-2.43.4-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.97-.24-2.43-.4a4.9 4.9 0 0 1-1.77-1.15 4.9 4.9 0 0 1-1.15-1.77c-.16-.46-.35-1.26-.4-2.43C2.21 15.58 2.2 15.2 2.2 12s.01-3.58.07-4.85c.05-1.17.24-1.97.4-2.43a4.9 4.9 0 0 1 1.15-1.77A4.9 4.9 0 0 1 5.6 1.8c.46-.16 1.26-.35 2.43-.4C9.3 1.34 9.68 1.33 12 1.33m0 1.8c-3.15 0-3.5.01-4.73.07-1.02.05-1.58.22-1.94.36-.49.19-.84.42-1.2.79-.37.36-.6.71-.79 1.2-.14.36-.31.92-.36 1.94-.06 1.23-.07 1.58-.07 4.73s.01 3.5.07 4.73c.05 1.02.22 1.58.36 1.94.19.49.42.84.79 1.2.36.37.71.6 1.2.79.36.14.92.31 1.94.36 1.23.06 1.58.07 4.73.07s3.5-.01 4.73-.07c1.02-.05 1.58-.22 1.94-.36.49-.19.84-.42 1.2-.79.37-.36.6-.71.79-1.2.14-.36.31-.92.36-1.94.06-1.23.07-1.58.07-4.73s-.01-3.5-.07-4.73c-.05-1.02-.22-1.58-.36-1.94a3.1 3.1 0 0 0-.79-1.2 3.1 3.1 0 0 0-1.2-.79c-.36-.14-.92-.31-1.94-.36-1.23-.06-1.58-.07-4.73-.07M12 6.35A5.65 5.65 0 1 1 6.35 12 5.65 5.65 0 0 1 12 6.35m0 1.8A3.85 3.85 0 1 0 15.85 12 3.85 3.85 0 0 0 12 8.15m5.88-2.02a1.32 1.32 0 1 1-1.32-1.32 1.32 1.32 0 0 1 1.32 1.32"/></svg>
+      </a>
+      <a href="https://github.com/Doberto555" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.3a10.7 10.7 0 0 0-3.38 20.86c.53.1.73-.23.73-.51v-1.98c-2.98.65-3.6-1.29-3.6-1.29-.49-1.23-1.2-1.56-1.2-1.56-.98-.67.08-.65.08-.65 1.08.08 1.65 1.11 1.65 1.11.96 1.65 2.52 1.17 3.14.9.1-.7.38-1.17.68-1.44-2.38-.27-4.88-1.19-4.88-5.29 0-1.17.42-2.13 1.1-2.87-.11-.27-.48-1.36.1-2.84 0 0 .9-.29 2.95 1.1a10.2 10.2 0 0 1 5.38 0c2.04-1.39 2.94-1.1 2.94-1.1.58 1.48.22 2.57.1 2.84.69.74 1.1 1.7 1.1 2.87 0 4.11-2.5 5.01-4.89 5.28.39.34.73 1 .73 2.03v3.01c0 .28.19.62.74.51A10.7 10.7 0 0 0 12 1.3"/></svg>
+      </a>
+      <a href="https://youtube.com/@dobertomrlittech?si=HIzmvIGBNLNaKejg" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.5a3 3 0 0 0-2.1-2.1C19.5 4 12 4 12 4s-7.5 0-9.4.4A3 3 0 0 0 .5 6.5 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.5 3 3 0 0 0 2.1 2.1c1.9.4 9.4.4 9.4.4s7.5 0 9.4-.4a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.5M9.6 15.5v-7L15.8 12z"/></svg>
+      </a>
+    </div>
+
+    <div class="footer">
+      <span class="status"><span class="pulse"></span> API connected</span>
+      <span>Powered by Doberto Mr Lit</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── Configuration ──────────────────────────────────────────────────────────
+  // Point this at the public URL where the SUZANA MD Pterodactyl server
+  // exposes the pairing API (see api.js in the bot project).
+  const API_BASE_URL = "https://logical-technological-married-sacrifice.trycloudflare.com";
+
+  const form = document.getElementById('pairForm');
+  const phoneInput = document.getElementById('phone');
+  const submitBtn = document.getElementById('submitBtn');
+  const errorBox = document.getElementById('errorBox');
+  const resultBox = document.getElementById('resultBox');
+  const resultNumber = document.getElementById('resultNumber');
+  const resultCode = document.getElementById('resultCode');
+  const statConnected = document.getElementById('statConnected');
+  const statTotal = document.getElementById('statTotal');
+
+  async function loadStats() {
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/stats`);
+      const data = await res.json();
+      if (data.ok) {
+        statConnected.textContent = data.connected;
+        statTotal.textContent = data.total;
+      }
+    } catch (err) {
+      statConnected.textContent = '—';
+      statTotal.textContent = '—';
+    }
+  }
+  loadStats();
+  setInterval(loadStats, 15000); // refresh every 15s
+
+  function showError(msg){
+    errorBox.textContent = msg;
+    errorBox.classList.add('show');
+    resultBox.classList.remove('show');
+  }
+  function clearError(){
+    errorBox.classList.remove('show');
+    errorBox.textContent = '';
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    clearError();
+    const phone = phoneInput.value.replace(/\D/g, '');
+
+    if (!phone || phone.length < 7 || phone.length > 15) {
+      showError('Enter a valid international number without the + sign.');
+      return;
+    }
+    if (phone.startsWith('0')) {
+      showError('Remove the leading 0. Example: 50968570352');
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Generating…';
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/pair`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phoneNumber: phone })
+      });
+      const data = await res.json();
+
+      if (!res.ok || !data.ok) {
+        showError(data.error || 'Something went wrong. Try again.');
+        return;
+      }
+
+      if (data.alreadyConnected) {
+        showError(`+${phone} is already connected — no code needed.`);
+        return;
+      }
+
+      resultNumber.textContent = `+${phone}`;
+      resultCode.textContent = data.code;
+      resultBox.classList.add('show');
+    } catch (err) {
+      showError('Could not reach the server. Check your connection and try again.');
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Generate pairing code';
+    }
+  });
+</script>
+
+</body>
+</html>
