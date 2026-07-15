@@ -36,8 +36,8 @@ export function forwardedContext() {
     serverMessageId: -1
   };
   const _0x80dfac = {
-    title: BOT_NAME,
-    body: "> 𝗗𝗘𝗩 : " + DEV_NAME,
+    title: "SUZANA MD",
+    body: "𝗗𝗘𝗩 : " + DEV_NAME,
     thumbnailUrl: MENU_IMAGE,
     sourceUrl: WA_CHANNELS[0],
     mediaType: 1,
@@ -518,8 +518,14 @@ async function sendText(_0x2843bb, _0x48c80f, _0x20f675, _0x1066dc) {
   const _0x2fa2da = {
     quoted: _0x1066dc
   };
+  const _0xtxtimg = await getImageBuffer(MENU_IMAGE);
+  const _0xtxtimgurl = {
+    url: MENU_IMAGE
+  };
+  const _0xtxtimgsrc = _0xtxtimg ? _0xtxtimg : _0xtxtimgurl;
   return _0x2843bb.sendMessage(_0x48c80f, {
-    text: _0x20f675,
+    image: _0xtxtimgsrc,
+    caption: _0x20f675,
     contextInfo: forwardedContext()
   }, _0x2fa2da);
 }
@@ -827,8 +833,12 @@ export async function handleCommand(_0x10dc5d, _0x4318a0) {
           const _0x3523e5 = {
             quoted: _0x4318a0
           };
+          const _0xafkimg = await getImageBuffer(MENU_IMAGE);
           await _0x10dc5d.sendMessage(_0x34e785, {
-            text: "👋 ʙᴏɴ ʀᴇᴛᴏᴜʀ @" + _0x32be90 + " ! ᴛᴜ éᴛᴀɪs ᴀғᴋ ᴅᴇᴘᴜɪs " + _0x5dd8b2 + " ᴍɪɴ (" + (_0x179103.reason || "ᴀᴜᴄᴜɴᴇ ʀᴀɪsᴏɴ") + ").",
+            image: _0xafkimg ? _0xafkimg : {
+              url: MENU_IMAGE
+            },
+            caption: "👋 ʙᴏɴ ʀᴇᴛᴏᴜʀ @" + _0x32be90 + " ! ᴛᴜ éᴛᴀɪs ᴀғᴋ ᴅᴇᴘᴜɪs " + _0x5dd8b2 + " ᴍɪɴ (" + (_0x179103.reason || "ᴀᴜᴄᴜɴᴇ ʀᴀɪsᴏɴ") + ").",
             mentions: [_0x4a75a4],
             contextInfo: forwardedContext()
           }, _0x3523e5);
@@ -1110,8 +1120,12 @@ export async function handleCommand(_0x10dc5d, _0x4318a0) {
           const _0x4c76e7 = {
             quoted: _0x4318a0
           };
+          const _0xtagallimg = await getImageBuffer(MENU_IMAGE);
           await _0x10dc5d.sendMessage(_0x34e785, {
-            text: _0x1aa9ff,
+            image: _0xtagallimg ? _0xtagallimg : {
+              url: MENU_IMAGE
+            },
+            caption: _0x1aa9ff,
             mentions: _0x53fb8c,
             contextInfo: forwardedContext()
           }, _0x4c76e7);
@@ -1129,8 +1143,12 @@ export async function handleCommand(_0x10dc5d, _0x4318a0) {
           if (!_0x2ea40d) {
             break;
           }
+          const _0xtagadminsimg = await getImageBuffer(MENU_IMAGE);
           await _0x10dc5d.sendMessage(_0x34e785, {
-            text: _0x5ee7ca || "▢",
+            image: _0xtagadminsimg ? _0xtagadminsimg : {
+              url: MENU_IMAGE
+            },
+            caption: _0x5ee7ca || "▢",
             mentions: _0x2ea40d.participants.map(_0x239143 => _0x239143.id),
             contextInfo: forwardedContext()
           });
@@ -1548,8 +1566,12 @@ export async function handleCommand(_0x10dc5d, _0x4318a0) {
             let _0x396079 = 0;
             for (const _0x3aff62 of Object.keys(_0x19f9ae)) {
               try {
+                const _0xbcimg = await getImageBuffer(MENU_IMAGE);
                 await _0x10dc5d.sendMessage(_0x3aff62, {
-                  text: "📢 *𝗕𝗥𝗢𝗔𝗗𝗖𝗔𝗦𝗧*\n\n" + _0x5ee7ca + "\n\n> " + BOT_NAME,
+                  image: _0xbcimg ? _0xbcimg : {
+                    url: MENU_IMAGE
+                  },
+                  caption: "📢 *𝗕𝗥𝗢𝗔𝗗𝗖𝗔𝗦𝗧*\n\n" + _0x5ee7ca + "\n\n" + "SUZANA MD",
                   contextInfo: forwardedContext()
                 });
                 _0x396079++;
@@ -2811,8 +2833,12 @@ export async function handleCommand(_0x10dc5d, _0x4318a0) {
           const _0x3e85e9 = {
             quoted: _0x4318a0
           };
+          const _0xadminsimg = await getImageBuffer(MENU_IMAGE);
           await _0x10dc5d.sendMessage(_0x34e785, {
-            text: _0x2399af,
+            image: _0xadminsimg ? _0xadminsimg : {
+              url: MENU_IMAGE
+            },
+            caption: _0x2399af,
             mentions: _0x30784e,
             contextInfo: forwardedContext()
           }, _0x3e85e9);
@@ -2849,8 +2875,12 @@ export async function handleCommand(_0x10dc5d, _0x4318a0) {
             try {
               await _0x10dc5d.groupParticipantsUpdate(_0x34e785, [_0x4bb6d9], "remove");
             } catch {}
+            const _0xkickimg = await getImageBuffer(MENU_IMAGE);
             await _0x10dc5d.sendMessage(_0x34e785, {
-              text: "⛔ @" + _0x4bb6d9.split("@")[0] + " kické (3/3 warns).",
+              image: _0xkickimg ? _0xkickimg : {
+                url: MENU_IMAGE
+              },
+              caption: "⛔ @" + _0x4bb6d9.split("@")[0] + " kické (3/3 warns).",
               mentions: [_0x4bb6d9],
               contextInfo: forwardedContext()
             });
@@ -2880,8 +2910,12 @@ export async function handleCommand(_0x10dc5d, _0x4318a0) {
             break;
           }
           const _0x3e0d38 = "⚠️ *WARNS*\n\n" + _0x22d546.map(([_0x5a5d1e, _0x257acc]) => "• @" + _0x5a5d1e.split("@")[0] + " → " + _0x257acc + "/3").join("\n");
+          const _0xwarnsimg = await getImageBuffer(MENU_IMAGE);
           await _0x10dc5d.sendMessage(_0x34e785, {
-            text: _0x3e0d38,
+            image: _0xwarnsimg ? _0xwarnsimg : {
+              url: MENU_IMAGE
+            },
+            caption: _0x3e0d38,
             mentions: _0x22d546.map(([_0x8e33ae]) => _0x8e33ae),
             contextInfo: forwardedContext()
           });
