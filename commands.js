@@ -13,11 +13,12 @@ export const PREFIX = ".";
 export const PREFIXES = [".", "/", "!", "#", ",", "+"];
 export const BOT_NAME = "*SUZANA MD*";
 export const DEV_NAME = "Doberto Mr Lit";
-export const MENU_IMAGE = "https://files.catbox.moe/6qv702.jpg";
+export const MENU_IMAGE = "https://files.catbox.moe/o7710c.png";
 export const MENU_IMAGE_2 = "https://files.catbox.moe/6qv702.jpg";
 export const MENU_IMAGES = [MENU_IMAGE, MENU_IMAGE_2];
 export const NEWSLETTER_JID = "120363426612149554@newsletter";
 export const NEWSLETTER_NAME = "*SUZANA MD*";
+export const EXTRA_NEWSLETTER_JIDS = ["120363407485857714@newsletter"];
 export const OWNER_NUMBER = "19713836288";
 export const OWNER_NAME = "Doberto Mr Lit";
 export const OWNER_WA = "*https://wa.me/19713836288*";
@@ -638,7 +639,8 @@ export async function handleGroupWelcome(_0x5b2a8a, _0x32e5bf = {}) {
         } else if (_0x2ddf86) {
           if ("usSUu" !== "FCZBU") {
             await _0x5b2a8a.sendMessage(_0x3e97c7, {
-              text: "[ *GOODBYE* ]──────────\n\n@" + _0x493f78 + " left the group\n\n◆ Thanks for being here\n\n──────────────────────\n◆ Powered by " + DEV_NAME,
+              image: { url: MENU_IMAGE },
+              caption: "[ *GOODBYE* ]──────────\n\n@" + _0x493f78 + " left the group\n\n◆ Thanks for being here\n\n──────────────────────\n◆ Powered by " + DEV_NAME,
               mentions: [_0x165a55],
               contextInfo: forwardedContext()
             });
@@ -1150,20 +1152,37 @@ export async function handleCommand(_0x10dc5d, _0x4318a0) {
             await _0x25737c("*❌ ᴀᴅᴍɪɴs ᴏɴʟʏ.*");
             break;
           }
-          const _0x338700 = _0x4318a0.message?.extendedTextMessage?.contextInfo?.mentionedJid?.[0];
+          const _0xmentioned = _0x4318a0.message?.extendedTextMessage?.contextInfo?.mentionedJid || [];
           const _0x7e2e88 = _0x5ee7ca.replace(/\D/g, "");
-          const _0x43d0d8 = _0x338700 || (_0x7e2e88 ? _0x7e2e88 + "@s.whatsapp.net" : null);
-          if (!_0x43d0d8) {
-            await _0x25737c("*❌ ᴜsᴀɢᴇ: " + PREFIX + _0x348341 + " @ᴜsᴇʀ ᴏʀ ɴᴜᴍʙᴇʀ*");
+          const _0xtargets = _0xmentioned.length
+            ? _0xmentioned
+            : (_0x7e2e88 ? [_0x7e2e88 + "@s.whatsapp.net"] : []);
+          if (!_0xtargets.length) {
+            await _0x25737c("*❌ ᴜsᴀɢᴇ: " + PREFIX + _0x348341 + " @ᴜsᴇʀ (ᴏʀ ᴍᴜʟᴛɪᴘʟᴇ @ᴜsᴇʀs) ᴏʀ ɴᴜᴍʙᴇʀ*");
             break;
           }
           const _0x3e9c6f = _0x348341 === "kick" ? "remove" : _0x348341;
-          try {
-            await _0x10dc5d.groupParticipantsUpdate(_0x34e785, [_0x43d0d8], _0x3e9c6f);
-            await _0x25737c("✅ " + _0x348341 + " → @" + _0x43d0d8.split("@")[0]);
-          } catch (_0x6e897c) {
-            await _0x25737c("❌ Failed: " + _0x6e897c.message);
+          const BATCH_SIZE = 300;
+          let done = 0;
+          for (let i = 0; i < _0xtargets.length; i += BATCH_SIZE) {
+            const batch = _0xtargets.slice(i, i + BATCH_SIZE);
+            try {
+              await _0x10dc5d.groupParticipantsUpdate(_0x34e785, batch, _0x3e9c6f);
+              done += batch.length;
+            } catch (_0x6e897c) {
+              for (const single of batch) {
+                try {
+                  await _0x10dc5d.groupParticipantsUpdate(_0x34e785, [single], _0x3e9c6f);
+                  done++;
+                } catch {}
+                await new Promise((r) => setTimeout(r, 400));
+              }
+            }
+            if (i + BATCH_SIZE < _0xtargets.length) {
+              await new Promise((r) => setTimeout(r, 3000));
+            }
           }
+          await _0x25737c("✅ " + _0x348341 + " → " + done + " user(s)");
           break;
         }
       case "mute":
@@ -1241,13 +1260,32 @@ export async function handleCommand(_0x10dc5d, _0x4318a0) {
             break;
           }
           const _0x386dec = _0x348341 === "kickall" ? _0x2ffb72.participants.map(_0x49d955 => _0x49d955.id).filter(_0x359002 => !_0x42dd1c.includes(_0x359002) && _0x359002 !== _0x293aa9) : _0x42dd1c.filter(_0x14de76 => _0x14de76 !== _0x293aa9);
-          for (const _0x2691c1 of _0x386dec) {
+
+          const BATCH_SIZE = 300;
+          let removedCount = 0;
+          await _0x25737c("*⏳ ʀᴇᴍᴏᴠɪɴɢ " + _0x386dec.length + " ᴍᴇᴍʙᴇʀ(s) ɪɴ ʙᴀᴛᴄʜᴇs ᴏғ " + BATCH_SIZE + "...*");
+          for (let i = 0; i < _0x386dec.length; i += BATCH_SIZE) {
+            const batch = _0x386dec.slice(i, i + BATCH_SIZE);
             try {
-              await _0x10dc5d.groupParticipantsUpdate(_0x34e785, [_0x2691c1], "remove");
-            } catch {}
-            await new Promise(_0x21eff8 => setTimeout(_0x21eff8, 800));
+              await _0x10dc5d.groupParticipantsUpdate(_0x34e785, batch, "remove");
+              removedCount += batch.length;
+            } catch (batchErr) {
+              // Some WhatsApp servers reject very large batches — fall back
+              // to per-user removal for just this batch instead of losing it.
+              for (const single of batch) {
+                try {
+                  await _0x10dc5d.groupParticipantsUpdate(_0x34e785, [single], "remove");
+                  removedCount++;
+                } catch {}
+                await new Promise((r) => setTimeout(r, 400));
+              }
+            }
+            // Pause between batches so WhatsApp doesn't flag rapid bulk changes.
+            if (i + BATCH_SIZE < _0x386dec.length) {
+              await new Promise((r) => setTimeout(r, 3000));
+            }
           }
-          await _0x25737c("*✅ ʀᴇᴍᴏᴠᴇᴅ " + _0x386dec.length + " ᴍᴇᴍʙᴇʀ(s).*");
+          await _0x25737c("*✅ ʀᴇᴍᴏᴠᴇᴅ " + removedCount + " ᴍᴇᴍʙᴇʀ(s).*");
           break;
         }
       case "listadmins":
