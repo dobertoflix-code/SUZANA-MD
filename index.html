@@ -251,6 +251,31 @@
     border-right: 1px solid var(--line);
     margin-right: 10px;
   }
+  .select-row{ padding: 0; }
+  .label-spaced{ margin-top: 18px; }
+  select#serverSelect{
+    flex:1;
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    color: var(--text);
+    font-family:'JetBrains Mono', monospace;
+    font-size: 15px;
+    padding: 13px 14px;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236f6c8a'><path d='M7 10l5 5 5-5z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 18px;
+  }
+  select#serverSelect option{
+    background: #0b0a15;
+    color: var(--text);
+  }
   input[type=tel]{
     flex:1;
     background: transparent;
@@ -618,7 +643,12 @@
     </div>
 
     <form id="pairForm">
-      <label for="phone" id="i18nPhoneLabel">Phone number</label>
+      <label for="serverSelect" id="i18nServerLabel">Server</label>
+      <div class="input-row select-row">
+        <select id="serverSelect" name="server"></select>
+      </div>
+
+      <label for="phone" id="i18nPhoneLabel" class="label-spaced">Phone number</label>
       <div class="input-row">
         <span>+</span>
         <input type="tel" id="phone" name="phone" placeholder="50968570352" inputmode="numeric" autocomplete="tel" required />
@@ -675,9 +705,34 @@
 
 <script>
   // ── Configuration ──────────────────────────────────────────────────────────
-  // Point this at the public URL where the SUZANA MD Pterodactyl server
-  // exposes the pairing API (see api.js in the bot project).
-  const API_BASE_URL = "https://invitation-playstation-maui-vegetation.trycloudflare.com";
+  // Each entry points at the public URL where a SUZANA MD Pterodactyl server
+  // exposes its pairing API (see api.js in the bot project). Add/remove
+  // entries here as servers are created — the dropdown below is generated
+  // from this list automatically.
+  const SERVERS = [
+    { id: 'suzana1', label: 'SUZANA MD 1', apiBaseUrl: 'https://clarke-oklahoma-hits-friends.trycloudflare.com' },
+    { id: 'suzana2', label: 'SUZANA MD 2', apiBaseUrl: 'https://agreement-silver-isaac-modes.trycloudflare.com' },
+    { id: 'suzana3', label: 'SUZANA MD 3', apiBaseUrl: 'https://pledge-anaheim-hazards-jet.trycloudflare.com' },
+  ];
+
+  const serverSelect = document.getElementById('serverSelect');
+  SERVERS.forEach((s, i) => {
+    const opt = document.createElement('option');
+    opt.value = s.id;
+    opt.textContent = s.label;
+    serverSelect.appendChild(opt);
+  });
+
+  function getSelectedApiBase() {
+    const server = SERVERS.find((s) => s.id === serverSelect.value) || SERVERS[0];
+    return server.apiBaseUrl;
+  }
+
+  serverSelect.addEventListener('change', () => {
+    resultBox.classList.remove('show');
+    errorBox.classList.remove('show');
+    loadStats();
+  });
 
   // ── Translations ─────────────────────────────────────────────────────────
   const translations = {
@@ -688,7 +743,7 @@
       sub: 'Pa bezwen Telegram. Antre nimewo w, jwenn yon kòd 8-chif, epi konekte bot la nan WhatsApp → Aparèy Konekte.',
       featuresTitle: 'Sa SUZANA MD ka fè',
       featDesc: ['Lis kòmand konplè', 'Chat ak AI', 'Telechaje mizik', 'Meteyo an dirèk', 'Gade & reyaji otomatikman', 'Toujou konekte'],
-      phoneLabel: 'Nimewo telefòn',
+      serverLabel: 'Sèvè', phoneLabel: 'Nimewo telefòn',
       hint: 'Fòma entènasyonal, san 0 devan. Egzanp:',
       submitBtn: 'Jenere kòd pairing',
       submitBtnLoading: 'Ap jenere…',
@@ -720,7 +775,7 @@
       sub: 'No Telegram needed. Enter your number, get an 8-digit code, and link the bot from WhatsApp → Linked Devices.',
       featuresTitle: 'What SUZANA MD can do',
       featDesc: ['Full command list', 'Chat with AI', 'Download music', 'Live forecast', 'Views & reacts automatically', 'Always connected'],
-      phoneLabel: 'Phone number',
+      serverLabel: 'Server', phoneLabel: 'Phone number',
       hint: 'International format, no leading 0. Example:',
       submitBtn: 'Generate pairing code',
       submitBtnLoading: 'Generating…',
@@ -752,7 +807,7 @@
       sub: 'Pas besoin de Telegram. Entrez votre numéro, obtenez un code à 8 chiffres, et liez le bot depuis WhatsApp → Appareils liés.',
       featuresTitle: 'Ce que SUZANA MD peut faire',
       featDesc: ['Liste complète des commandes', 'Discuter avec l\'IA', 'Télécharger de la musique', 'Météo en direct', 'Voit et réagit automatiquement', 'Toujours connecté'],
-      phoneLabel: 'Numéro de téléphone',
+      serverLabel: 'Serveur', phoneLabel: 'Numéro de téléphone',
       hint: 'Format international, sans le 0 initial. Exemple :',
       submitBtn: 'Générer le code',
       submitBtnLoading: 'Génération…',
@@ -794,6 +849,7 @@
       const el = document.getElementById('featDesc' + (i + 1));
       if (el) el.textContent = desc;
     });
+    document.getElementById('i18nServerLabel').textContent = t.serverLabel;
     document.getElementById('i18nPhoneLabel').textContent = t.phoneLabel;
     document.getElementById('i18nHint').textContent = t.hint;
     document.getElementById('submitBtnLabel').textContent = t.submitBtn;
@@ -859,7 +915,7 @@
 
   async function loadStats() {
     try {
-      const res = await fetch(`${API_BASE_URL}/api/stats`);
+      const res = await fetch(`${getSelectedApiBase()}/api/stats`);
       const data = await res.json();
       if (data.ok) {
         statConnected.textContent = data.connected;
@@ -903,7 +959,7 @@
     document.getElementById('submitBtnLabel').textContent = t.submitBtnLoading;
 
     try {
-      const res = await fetch(`${API_BASE_URL}/api/pair`, {
+      const res = await fetch(`${getSelectedApiBase()}/api/pair`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ phoneNumber: phone })
